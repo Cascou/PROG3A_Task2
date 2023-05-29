@@ -42,6 +42,19 @@ namespace PROG3_Part2
                     else
                     {
                         GetFarmer();//calls farmer list
+                        GetItem();//calls item list
+
+                        DataTable myTable = myEmployee.GetAllFarmerData();
+                        farmerProductView.DataSource = myTable;
+                        farmerProductView.DataBind();
+                        if (myTable.Rows.Count == 0)
+                        {
+                            NoResultlbl.Visible = true;
+                        }
+                        else if (myTable.Rows.Count > 0)
+                        {
+                            NoResultlbl.Visible = false;
+                        }
                     }
                     
                 }
@@ -80,6 +93,30 @@ namespace PROG3_Part2
             }
         }
 
+        public void GetItem()
+        {
+            string getItemQuery = "SELECT ItemType from Item";
+
+            using (SqlConnection connection = new SqlConnection(conString))
+            {
+                connection.Open();
+
+                SqlCommand command = new SqlCommand(getItemQuery, connection);
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    string myValue = reader["ItemType"].ToString();
+
+                    ListItem listItem = new ListItem(myValue);
+
+                    itemTypeSelect.Items.Add(listItem);
+                }
+                reader.Close();
+                connection.Close();
+            }
+        }
+
         /// <summary>
         /// This method is called when the search button is called.
         /// </summary>
@@ -90,18 +127,52 @@ namespace PROG3_Part2
             DateTime fromDate = fromCalendar.SelectedDate;
             DateTime toDate = toCalendar.SelectedDate;
 
-            if(farmerSelect.Value == "" || toDate.ToString().Equals("0001/01/01 00:00:00")|| toDate.ToString().Equals("0001/01/01 00:00:00"))
+            if(farmerSelect.Value == "" && toDate.ToString().Equals("0001/01/01 00:00:00") && fromDate.ToString().Equals("0001/01/01 00:00:00") && itemTypeSelect.Value == "")
             {
-                errorlbl.Text = "Must choose farmer, and dates to search";
+                errorlbl.Text = "Must pick farmer and dates or farmer and item type to search";
+            }
+            else if(farmerSelect.Value != "" && toDate.ToString().Equals("0001/01/01 00:00:00")  && fromDate.ToString().Equals("0001/01/01 00:00:00") && itemTypeSelect.Value == "")
+            {
+                errorlbl.Text = "Must choose dates or item type to search";
             }
             else if (toDate < fromDate)
             {
                 errorlbl.Text = "Your from date cannot start later, than your to date";
             }
-            else
+            else if(farmerSelect.Value != "" && !toDate.ToString().Equals("0001/01/01 00:00:00") && !fromDate.ToString().Equals("0001/01/01 00:00:00") && itemTypeSelect.Value == "")
             {
                 errorlbl.Text = "";
                 DataTable myTable = myEmployee.SearchFarmer(farmerSelect.Value, fromDate.ToShortDateString(), toDate.ToShortDateString());
+                farmerProductView.DataSource = myTable;
+                farmerProductView.DataBind();
+                if (myTable.Rows.Count == 0)
+                {
+                    NoResultlbl.Visible = true;
+                }
+                else if (myTable.Rows.Count > 0)
+                {
+                    NoResultlbl.Visible = false;
+                }
+            }
+            else if(farmerSelect.Value != "" && toDate.ToString().Equals("0001/01/01 00:00:00") && fromDate.ToString().Equals("0001/01/01 00:00:00") && itemTypeSelect.Value != "")
+            {
+                errorlbl.Text = "";
+                DataTable myTable = myEmployee.SearchType(farmerSelect.Value, itemTypeSelect.Value);
+                farmerProductView.DataSource = myTable;
+                farmerProductView.DataBind();
+                if (myTable.Rows.Count == 0)
+                {
+                    NoResultlbl.Visible = true;
+                }
+                else if (myTable.Rows.Count > 0)
+                {
+                    NoResultlbl.Visible = false;
+                }
+            }
+            else if(farmerSelect.Value != "" && !toDate.ToString().Equals("0001/01/01 00:00:00") && !fromDate.ToString().Equals("0001/01/01 00:00:00") && itemTypeSelect.Value != "")
+            {
+                errorlbl.Text = "";
+                DataTable myTable = myEmployee.FullSearch(farmerSelect.Value, itemTypeSelect.Value, fromDate.ToShortDateString(), toDate.ToShortDateString());
                 farmerProductView.DataSource = myTable;
                 farmerProductView.DataBind();
                 if (myTable.Rows.Count == 0)
@@ -144,6 +215,15 @@ namespace PROG3_Part2
                 }
             }
             return result;
+        }
+
+        protected void cancelbtn_Click(object sender, EventArgs e)
+        {
+            errorlbl.Text = "";
+            farmerSelect.Value = "";
+            itemTypeSelect.Value = "";
+            fromCalendar.SelectedDate = DateTime.MinValue;
+            toCalendar.SelectedDate = DateTime.MinValue;
         }
     }
 }

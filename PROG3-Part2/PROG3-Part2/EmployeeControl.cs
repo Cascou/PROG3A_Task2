@@ -48,6 +48,30 @@ namespace PROG3_Part2
             return myTable;
         }
 
+        public DataTable GetAllFarmerData()
+        {
+            //query to the database
+            string query = "SELECT StockID, ProductID, ItemType, ProductName, Quantity, UnitCost " +
+                            "FROM[dbo].[Item] I " +
+                            "JOIN[dbo].[Product] P ON I.ItemID = P.MyItemID JOIN[dbo].[Stock] S ON P.ProductID = S.MyProductID ";
+
+            DataTable myTable = new DataTable();
+
+            using (SqlConnection connection = new SqlConnection(conString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                    {
+                        adapter.Fill(myTable);
+                    }
+                }
+            }
+            return myTable;
+        }
+
         /// <summary>
         /// This method is responsible for filter searching the farmer for a specific farmer between specific dates.
         /// </summary>
@@ -78,6 +102,107 @@ namespace PROG3_Part2
                 "FROM[dbo].[Item] I " +
                 "JOIN[dbo].[Product] P ON I.ItemID = P.MyItemID JOIN[dbo].[Stock] S ON P.ProductID = S.MyProductID " +
                 "WHERE S.MyFarmerID = " + myFarmerID + " AND " +
+                "S.DateListed BETWEEN '" + fromDate + "' AND '" + toDate + "'";
+
+                DataTable myTable = new DataTable();
+
+                using (SqlConnection connection = new SqlConnection(conString))
+                {
+                    connection.Open();
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                        {
+                            adapter.Fill(myTable);
+                        }
+                    }
+                }
+                return myTable;
+            }
+        }
+
+        /// <summary>
+        /// This method is responsible for filter searching the farmer for a specific farmer and specific item type.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="productType"></param>
+        /// <returns></returns>
+        public DataTable SearchType(string username, string productType)
+        {
+            using (var context = new FarmCentralEntities())
+            {
+                var findUserID = context.Users.Where(a => a.Username.Equals(username)).Select(a => new { a.UserID });
+
+                foreach (var user in findUserID)
+                {
+                    myUserID = user.UserID;//sets record of userID to myUserID variable
+                }
+
+                var findFarmerID = context.Farmers.Where(a => a.MyUserID.Equals(myUserID)).Select(a => new { a.FarmerID });
+
+                foreach (var user in findFarmerID)
+                {
+                    myFarmerID = user.FarmerID;//sets record of userID to myUserID variable
+                }
+
+                //query to the database
+                string query = "SELECT StockID, ProductID, ItemType, ProductName, Quantity, UnitCost " +
+                "FROM[dbo].[Item] I " +
+                "JOIN[dbo].[Product] P ON I.ItemID = P.MyItemID JOIN[dbo].[Stock] S ON P.ProductID = S.MyProductID " +
+                "WHERE S.MyFarmerID = " + myFarmerID + " AND " +
+                "I.ItemType = '" + productType + "'";
+
+                DataTable myTable = new DataTable();
+
+                using (SqlConnection connection = new SqlConnection(conString))
+                {
+                    connection.Open();
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                        {
+                            adapter.Fill(myTable);
+                        }
+                    }
+                }
+                return myTable;
+            }
+        }
+
+        /// <summary>
+        /// This method is responsible for filter searching the farmer for a specific farmer ,specific item type and specific date range.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="productType"></param>
+        /// <param name="fromDate"></param>
+        /// <param name="toDate"></param>
+        /// <returns></returns>
+        public DataTable FullSearch(string username, string productType, string fromDate, string toDate)
+        {
+            using (var context = new FarmCentralEntities())
+            {
+                var findUserID = context.Users.Where(a => a.Username.Equals(username)).Select(a => new { a.UserID });
+
+                foreach (var user in findUserID)
+                {
+                    myUserID = user.UserID;//sets record of userID to myUserID variable
+                }
+
+                var findFarmerID = context.Farmers.Where(a => a.MyUserID.Equals(myUserID)).Select(a => new { a.FarmerID });
+
+                foreach (var user in findFarmerID)
+                {
+                    myFarmerID = user.FarmerID;//sets record of userID to myUserID variable
+                }
+
+                //query to the database
+                string query = "SELECT StockID, ProductID, ItemType, ProductName, Quantity, UnitCost " +
+                "FROM[dbo].[Item] I " +
+                "JOIN[dbo].[Product] P ON I.ItemID = P.MyItemID JOIN [dbo].[Stock] S ON P.ProductID = S.MyProductID " +
+                "WHERE I.ItemType = '" + productType + "' AND " + 
+                "S.MyFarmerID = " + myFarmerID + " AND " +
                 "S.DateListed BETWEEN '" + fromDate + "' AND '" + toDate + "'";
 
                 DataTable myTable = new DataTable();

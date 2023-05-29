@@ -35,9 +35,15 @@
          .auto-style6 {
              height: 179px;
          }
+         .auto-style7 {
+             height: 50px;
+         }
+         .auto-style8 {
+             width: 220px;
+         }
      </style>
 </head>
-<body style="height:1200px">
+<body style="height:1500px">
     <form runat="server" style="background-color:lightblue; height:100%;">
         <asp:ScriptManager runat="server">
             <Scripts>
@@ -89,6 +95,17 @@
                         </td>
                         <td class="auto-style4">
                             <select runat="server" id="farmerSelect" class="auto-style2" >
+                                <option></option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="auto-style7">
+                            <asp:Label ID="itemTypelbl" runat="server" Text="Item Type: "></asp:Label>
+                        </td>
+                        <td class="auto-style7" >
+                            <select runat="server" id="itemTypeSelect" class="auto-style8">
+                                <option></option>
                             </select>
                         </td>
                     </tr>
@@ -105,13 +122,17 @@
                             <asp:Label ID="untilDatelbl" runat="server" Text="To: "></asp:Label>
                         </td>
                         <td class="auto-style6">
-                            <asp:Calendar ID="toCalendar" runat="server"></asp:Calendar>
+                            <asp:Calendar ID="toCalendar" runat="server" Width="224px"></asp:Calendar>
                         </td>
                     </tr>
                     <tr>
                         <td class="auto-style1">
                             <asp:Button ID="searchbtn" runat="server" Text="Search" OnClick="searchbtn_Click" BackColor="LightSkyBlue" BorderStyle="None" ToolTip="Click here to search for farmer products" />
                         </td>
+                        <td class="auto-style1">
+                            <asp:Button ID="cancelbtn" runat="server" Text="Reset" BackColor="LightSkyBlue" BorderStyle="None" ToolTip="Click here to cancel search for farmer products" OnClick="cancelbtn_Click" />
+                        </td>
+
                     </tr>
                     <tr>
                         <td class="auto-style1">
@@ -126,7 +147,6 @@
                         <asp:BoundField DataField="StockID" HeaderText="StockID" ReadOnly="true" ItemStyle-HorizontalAlign="Center" ItemStyle-VerticalAlign="Middle" ItemStyle-Height="30px" ItemStyle-Width="100px"/>
                         <asp:BoundField DataField="ProductID" HeaderText="ProductID" ReadOnly="true" ItemStyle-HorizontalAlign="Center" ItemStyle-VerticalAlign="Middle" ItemStyle-Height="30px" ItemStyle-Width="100px"/>
                         <asp:BoundField DataField="ItemType" HeaderText="ItemType" ReadOnly="true" ItemStyle-HorizontalAlign="Center" ItemStyle-VerticalAlign="Middle" ItemStyle-Height="30px" ItemStyle-Width="100px"/>
-                        <asp:BoundField DataField="StockID" HeaderText="StockID" ReadOnly="true" ItemStyle-HorizontalAlign="Center" ItemStyle-VerticalAlign="Middle" ItemStyle-Height="30px" ItemStyle-Width="100px"/>
                         <asp:BoundField DataField="ProductName" HeaderText="ProductName" ReadOnly="true" ItemStyle-HorizontalAlign="Center" ItemStyle-VerticalAlign="Middle" ItemStyle-Height="30px" ItemStyle-Width="100px"/>
                         <asp:BoundField DataField="Quantity" HeaderText="Quantity" ReadOnly="true" ItemStyle-HorizontalAlign="Center" ItemStyle-VerticalAlign="Middle" ItemStyle-Height="30px" ItemStyle-Width="100px"/>
                         <asp:BoundField DataField="UnitCost" HeaderText="UnitCost" ReadOnly="true" ItemStyle-HorizontalAlign="Center" ItemStyle-VerticalAlign="Middle" ItemStyle-Height="30px" ItemStyle-Width="100px"/>
