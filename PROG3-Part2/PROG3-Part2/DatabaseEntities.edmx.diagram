@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="74857d26f2484e02ab021d49caf96f5f" Name="Diagram1" ZoomLevel="86">
+        <EntityTypeShape EntityType="FarmCentralModel.Employee" Width="1.5" PointX="3" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="FarmCentralModel.Farmer" Width="1.5" PointX="3" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="FarmCentralModel.Item" Width="1.5" PointX="0.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="FarmCentralModel.Product" Width="1.5" PointX="3" PointY="6.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="FarmCentralModel.Stock" Width="1.5" PointX="5.25" PointY="3.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="FarmCentralModel.Transaction" Width="1.5" PointX="7.5" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="FarmCentralModel.User" Width="1.5" PointX="0.75" PointY="2.375" IsExpanded="true" />
+        <AssociationConnector Association="FarmCentralModel.User_E_FK" ManuallyRouted="false" />
+        <AssociationConnector Association="FarmCentralModel.Farmer_FK" ManuallyRouted="false" />
+        <AssociationConnector Association="FarmCentralModel.User_F_FK" ManuallyRouted="false" />
+        <AssociationConnector Association="FarmCentralModel.Item_FK" ManuallyRouted="false" />
+        <AssociationConnector Association="FarmCentralModel.Product_FK" ManuallyRouted="false" />
+        <AssociationConnector Association="FarmCentralModel.Stock_FK" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

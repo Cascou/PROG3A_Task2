@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="FarmCentralModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Employee">
+    <Key>
+      <PropertyRef Name="EmployeeID" />
+    </Key>
+    <Property Name="EmployeeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="MyUserID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="User" Relationship="Self.User_E_FK" FromRole="Employee" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="Farmer">
+    <Key>
+      <PropertyRef Name="FarmerID" />
+    </Key>
+    <Property Name="FarmerID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="MyUserID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Stocks" Relationship="Self.Farmer_FK" FromRole="Farmer" ToRole="Stock" />
+    <NavigationProperty Name="User" Relationship="Self.User_F_FK" FromRole="Farmer" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="Item">
+    <Key>
+      <PropertyRef Name="ItemID" />
+    </Key>
+    <Property Name="ItemID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ItemType" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="Products" Relationship="Self.Item_FK" FromRole="Item" ToRole="Product" />
+  </EntityType>
+  <EntityType Name="Product">
+    <Key>
+      <PropertyRef Name="ProductID" />
+    </Key>
+    <Property Name="ProductID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="MyItemID" Type="Int32" Nullable="false" />
+    <Property Name="ProductName" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Quantity" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="UnitCost" Type="Decimal" Precision="15" Scale="2" Nullable="false" />
+    <NavigationProperty Name="Item" Relationship="Self.Item_FK" FromRole="Product" ToRole="Item" />
+    <NavigationProperty Name="Stocks" Relationship="Self.Product_FK" FromRole="Product" ToRole="Stock" />
+  </EntityType>
+  <EntityType Name="Stock">
+    <Key>
+      <PropertyRef Name="StockID" />
+    </Key>
+    <Property Name="StockID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="MyFarmerID" Type="Int32" Nullable="false" />
+    <Property Name="MyProductID" Type="Int32" Nullable="false" />
+    <Property Name="DateListed" Type="DateTime" Nullable="false" Precision="0" />
+    <NavigationProperty Name="Farmer" Relationship="Self.Farmer_FK" FromRole="Stock" ToRole="Farmer" />
+    <NavigationProperty Name="Product" Relationship="Self.Product_FK" FromRole="Stock" ToRole="Product" />
+    <NavigationProperty Name="Transactions" Relationship="Self.Stock_FK" FromRole="Stock" ToRole="Transactions" />
+  </EntityType>
+  <EntityType Name="Transaction">
+    <Key>
+      <PropertyRef Name="TransactionID" />
+    </Key>
+    <Property Name="TransactionID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="MyStockID" Type="Int32" Nullable="false" />
+    <Property Name="Quantity" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Price" Type="Decimal" Precision="15" Scale="2" Nullable="false" />
+    <NavigationProperty Name="Stock" Relationship="Self.Stock_FK" FromRole="Transactions" ToRole="Stock" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="UserID" />
+    </Key>
+    <Property Name="UserID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Username" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="Employees" Relationship="Self.User_E_FK" FromRole="Users" ToRole="Employee" />
+    <NavigationProperty Name="Farmers" Relationship="Self.User_F_FK" FromRole="Users" ToRole="Farmer" />
+  </EntityType>
+  <Association Name="User_E_FK">
+    <End Role="Users" Type="Self.User" Multiplicity="1" />
+    <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="Employee">
+        <PropertyRef Name="MyUserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="Farmer_FK">
+    <End Role="Farmer" Type="Self.Farmer" Multiplicity="1" />
+    <End Role="Stock" Type="Self.Stock" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Farmer">
+        <PropertyRef Name="FarmerID" />
+      </Principal>
+      <Dependent Role="Stock">
+        <PropertyRef Name="MyFarmerID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="User_F_FK">
+    <End Role="Users" Type="Self.User" Multiplicity="1" />
+    <End Role="Farmer" Type="Self.Farmer" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="Farmer">
+        <PropertyRef Name="MyUserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="Item_FK">
+    <End Role="Item" Type="Self.Item" Multiplicity="1" />
+    <End Role="Product" Type="Self.Product" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Item">
+        <PropertyRef Name="ItemID" />
+      </Principal>
+      <Dependent Role="Product">
+        <PropertyRef Name="MyItemID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="Product_FK">
+    <End Role="Product" Type="Self.Product" Multiplicity="1" />
+    <End Role="Stock" Type="Self.Stock" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Product">
+        <PropertyRef Name="ProductID" />
+      </Principal>
+      <Dependent Role="Stock">
+        <PropertyRef Name="MyProductID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="Stock_FK">
+    <End Role="Stock" Type="Self.Stock" Multiplicity="1" />
+    <End Role="Transactions" Type="Self.Transaction" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Stock">
+        <PropertyRef Name="StockID" />
+      </Principal>
+      <Dependent Role="Transactions">
+        <PropertyRef Name="MyStockID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="FarmCentralEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Employees" EntityType="Self.Employee" />
+    <EntitySet Name="Farmers" EntityType="Self.Farmer" />
+    <EntitySet Name="Items" EntityType="Self.Item" />
+    <EntitySet Name="Products" EntityType="Self.Product" />
+    <EntitySet Name="Stocks" EntityType="Self.Stock" />
+    <EntitySet Name="Transactions" EntityType="Self.Transaction" />
+    <EntitySet Name="Users" EntityType="Self.User" />
+    <AssociationSet Name="User_E_FK" Association="Self.User_E_FK">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Employee" EntitySet="Employees" />
+    </AssociationSet>
+    <AssociationSet Name="Farmer_FK" Association="Self.Farmer_FK">
+      <End Role="Farmer" EntitySet="Farmers" />
+      <End Role="Stock" EntitySet="Stocks" />
+    </AssociationSet>
+    <AssociationSet Name="User_F_FK" Association="Self.User_F_FK">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Farmer" EntitySet="Farmers" />
+    </AssociationSet>
+    <AssociationSet Name="Item_FK" Association="Self.Item_FK">
+      <End Role="Item" EntitySet="Items" />
+      <End Role="Product" EntitySet="Products" />
+    </AssociationSet>
+    <AssociationSet Name="Product_FK" Association="Self.Product_FK">
+      <End Role="Product" EntitySet="Products" />
+      <End Role="Stock" EntitySet="Stocks" />
+    </AssociationSet>
+    <AssociationSet Name="Stock_FK" Association="Self.Stock_FK">
+      <End Role="Stock" EntitySet="Stocks" />
+      <End Role="Transactions" EntitySet="Transactions" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
